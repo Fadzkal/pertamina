@@ -1,0 +1,104 @@
+document.addEventListener("visibilitychange", async () => {
+    window.blazorReconnectionHandler.visible = !document.hidden;
+    if (window.blazorReconnectionHandler.visible && !window.blazorReconnectionHandler.connected) {
+        await window.blazorReconnectionHandler.appReconnect();
+    }
+});
+window.blazorReconnectionHandler = {
+    isReloading: false,
+    isFailedToReconnect: false,
+    connected: true,
+    visible: true,
+    reconnectAttempts: 0,
+    appReconnect: async () => {
+        let attempts = window.blazorReconnectionHandler.reconnectAttempts;
+
+        while (attempts < 4) {
+            if (!window.blazorReconnectionHandler.visible) {
+                // console.warn("Tab is hidden. Pausing reconnect attempts.");
+                await new Promise(resolve => {
+                    let interval = setInterval(() => {
+                        if (window.blazorReconnectionHandler.visible) {
+                            clearInterval(interval);
+                            resolve();
+                        }
+                    }, 1000);
+                });
+            }
+
+            // console.log(`Reconnection attempt ${attempts + 1}...`);
+            try {
+                if (!window.blazorReconnectionHandler.connected) {
+                    await Blazor.reconnect();
+                } else {
+                    return;
+                }
+            } catch (err) {
+                console.warn("Reconnection failed. Retrying...", err);
+            }
+
+            attempts++;
+            window.blazorReconnectionHandler.reconnectAttempts = attempts;
+
+            if (attempts >= 4) {
+                // console.error("Failed to reconnect after 4 attempts. Switching to keepalive...");
+                await window.blazorReconnectionHandler.startKeepAlive();
+                return;
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
+        }
+    },
+    startKeepAlive: async () => {
+        const attemptReload = async () => {
+            if (!window.blazorReconnectionHandler.isReloading) {
+                window.blazorReconnectionHandler.isReloading = true;
+                try {
+                    let result = await fetch("keepalive");
+                    // console.log("Keepalive response:", result);
+                    if (result.ok) {
+                        // console.log("Server is back. Reloading...");
+                        location.reload();
+                    } else {
+                        // console.warn("Keepalive check failed. Retrying...");
+                    }
+                } catch (error) {
+                    console.error("Keepalive request failed:", error);
+                }
+                window.blazorReconnectionHandler.isReloading = false;
+            }
+        };
+
+        setInterval(attemptReload, 3000); // Retry keepalive every 3 seconds
+    }
+};
+Blazor.start({
+    configureSignalR: function (builder) {
+        builder.configureLogging("none");
+    },
+    circuit: {
+        reconnectionHandler: {
+            onConnectionDown: async (options, error) => {
+                if (!window.blazorReconnectionHandler.connected) return;
+
+                // console.warn("Blazor connection lost. Attempting to reconnect...");
+                window.blazorReconnectionHandler.connected = false;
+                window.blazorReconnectionHandler.reconnectAttempts = 0;
+
+                await window.blazorReconnectionHandler.appReconnect();
+            },
+            onConnectionUp: () => {
+                // console.log("Reconnected successfully!");
+                window.blazorReconnectionHandler.connected = true;
+                window.blazorReconnectionHandler.reconnectAttempts = 0;
+                window.blazorReconnectionHandler.isFailedToReconnect = false;
+            }
+        },
+        reconnectionOptions: {
+            maxRetries: 6,
+            retryIntervalMilliseconds: (previousAttempts, maxRetries) =>
+                previousAttempts >= maxRetries ? null : previousAttempts * 1000
+        },
+    },
+    logLevel: 'error'
+});

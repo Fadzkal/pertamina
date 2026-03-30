@@ -1,0 +1,408 @@
+function handleHeaderScroll (defaultLogo, whiteLogo, defaultSustainability, whiteDefaultSustainability, dotnetRef) {
+    const navbar = document.querySelector("header")
+    const navbarSolid = document.querySelector(".header-solid")
+    const navbarWrapper = document.querySelector(".header-wrapper")
+    const topbar = document.querySelector("ul.top-bar")
+    const logos = document.querySelectorAll('img.logo');
+    const logosustainability = document.querySelectorAll('img.logo-sustainability');
+    const buttonRegistrasi = document.querySelector('.btn-registrasi')
+    let offsetSection = document.querySelector("main > section")?.offsetHeight || document.querySelector("main > div")?.offsetHeight || 300
+    offsetSection = offsetSection < 300 ? 300 : offsetSection;
+    let prevExceedState = false;
+    let exceedState = false;
+    let exceedStateScrollTop = false;
+    let prevIsScrollTopState = true;
+    let isScrollTopState = false;
+    let lastScrollTop = 0;
+
+    window.headerScrollListener =  () => {
+        if (window.scrollY > offsetSection - 100) {
+            exceedState = true;
+        } else {
+            exceedState = false;
+        }
+
+        if (window.scrollY > offsetSection - 100) {
+            exceedStateScrollTop = true;
+        } else {
+            exceedStateScrollTop = false;
+        }
+
+        let scrollTop = window.scrollY;
+
+        if (prevExceedState !== exceedState) {
+            const stickyMenu = document.getElementById("stickymenu");
+            const pageSidebar = document.querySelector(".page-template-sidebar");
+            const pageSidebarDesktop = document.querySelector(".page-template-sidebar-desktop");
+            if (exceedState) {
+                const mobileMenuBar = document.querySelector(".mobile-menu-bar")
+                toggleExceedState(navbar, navbarSolid, topbar, stickyMenu, pageSidebar, pageSidebarDesktop, mobileMenuBar, navbarWrapper, buttonRegistrasi, logos, logosustainability, defaultLogo, whiteLogo, defaultSustainability, whiteDefaultSustainability, true)
+            } else {
+                const mobileMenuBar = document.querySelector(".mobile-menu-bar")
+                toggleExceedState(navbar, navbarSolid, topbar, stickyMenu, pageSidebar, pageSidebarDesktop, mobileMenuBar, navbarWrapper, buttonRegistrasi, logos, logosustainability, defaultLogo, whiteLogo, defaultSustainability, whiteDefaultSustainability, false)
+            }
+            prevExceedState = exceedState;
+        }
+
+        if ((scrollTop < lastScrollTop && scrollTop > 0) || !exceedStateScrollTop) {
+            isScrollTopState = true;
+        } else {
+            isScrollTopState = false;
+        }
+
+        if (prevIsScrollTopState !== isScrollTopState && exceedStateScrollTop) {
+            const stickyMenu = document.getElementById("stickymenu");
+            const stickyShare = document.getElementById("sticky-share");
+            const stickyPost = document.getElementById("sticky-post");
+            const pageSidebar = document.querySelector(".page-template-sidebar");
+            const pageSidebarDesktop = document.querySelector(".page-template-sidebar-desktop");
+            if (isScrollTopState) {
+                toggleStickyHeader(navbar, true)
+                toggleTopStickyHeader(navbar, stickyMenu, stickyShare, stickyPost, pageSidebar, pageSidebarDesktop, true)
+
+            } else {
+                toggleTopStickyHeader(navbar, stickyMenu, stickyShare, stickyPost, pageSidebar, pageSidebarDesktop, false)
+                toggleStickyHeader(navbar, false)
+            }
+            prevIsScrollTopState = isScrollTopState;
+        }
+
+        lastScrollTop = scrollTop;
+    }
+
+    window.addEventListener("scroll", window.headerScrollListener)
+}
+
+
+function handleHeaderScrollDispose() {
+    window.removeEventListener("scroll", window.headerScrollListener);
+}
+
+function toggleExceedState(navbar, navbarSolid, topbar, stickyMenu, pageSidebar, pageSidebarDesktop, mobileMenuBar, navbarWrapper, buttonRegistrasi, logos, logosustainability, defaultLogo, whiteLogo, defaultSustainability, whiteDefaultSustainability, exceeded) {
+    if (exceeded) {
+        navbar.classList?.remove("bg-transparent", "text-white")
+        navbar.classList?.add("bg-white", "text-black", "border-0", "border-b", "border-solid", "border-slate-200")
+        mobileMenuBar?.classList.remove("text-white")
+        mobileMenuBar?.classList.add("text-black")
+        buttonRegistrasi?.classList?.remove('text-white')
+        buttonRegistrasi?.classList?.add('text-slate-700')
+        topbar?.classList?.remove("mb-2")
+        topbar?.classList?.add("overflow-hidden", "h-0", "mb-0")
+        navbarWrapper?.classList?.remove("py-6")
+        navbarWrapper?.classList?.add("py-4")
+        logos.forEach(logo => {
+            logo.src = defaultLogo;
+        });
+        logosustainability.forEach(logo => {
+            logo.src = defaultSustainability;
+        });
+    } else {
+        stickyMenu?.classList.add("top-0")
+        stickyMenu?.classList.remove("top-[80px]")
+        pageSidebar?.classList.add("top-0")
+        pageSidebar?.classList.remove("top-[80px]")
+        pageSidebarDesktop?.classList.add("top-[88px]")
+        pageSidebarDesktop?.classList.remove("top-[88px]")
+        navbar?.classList?.add("-translate-y-full");
+        navbar?.classList?.remove("translate-y-0");
+        setTimeout(() => {
+            navbar?.classList?.add("translate-y-0");
+            navbar?.classList?.remove("-translate-y-full");
+            if (!navbarSolid) {
+                navbar.classList?.remove("bg-white", "text-black", "border-0", "border-b", "border-solid", "border-slate-200")
+                navbar.classList?.add("bg-transparent", "text-white")
+            }
+            topbar?.classList?.add("mb-2")
+            topbar?.classList?.remove("overflow-hidden", "h-0", "mb-0")
+        }, 250);
+        toggleStickyHeader(navbar, false)
+        if (!navbarSolid) {
+            mobileMenuBar?.classList.remove("text-black")
+            mobileMenuBar?.classList.add("text-white")
+            buttonRegistrasi?.classList?.add('text-white')
+            buttonRegistrasi?.classList?.remove('text-slate-700')
+            logos.forEach(logo => {
+                logo.src = whiteLogo;
+            });
+            logosustainability.forEach(logo => {
+                logo.src = whiteDefaultSustainability;
+            });
+        }
+        navbarWrapper?.classList?.add("py-6")
+        navbarWrapper?.classList?.remove("py-4")
+    }
+}
+
+function toggleStickyHeader(navbar, isSticky) {
+    if (isSticky) {
+        navbar?.classList?.remove("absolute");
+        navbar?.classList?.add("fixed");
+    } else {
+        setTimeout(() => {
+            navbar?.classList?.add("absolute");
+            navbar?.classList?.remove("fixed");
+        }, 200);
+    }
+}
+
+function toggleTopStickyHeader(navbar, stickyMenu, stickyShare, stickyPost, pageSidebar, pageSidebarDesktop, isSticky) {
+    if (isSticky) {
+        navbar?.classList?.add("translate-y-0");
+        navbar?.classList?.remove("-translate-y-full");
+
+        if (stickyShare) {
+            stickyShare.classList.remove("md:top-5")
+            stickyShare.classList.add("md:top-[90px]")
+        }
+
+        if (stickyPost) {
+            stickyPost.classList.remove("md:top-5")
+            stickyPost.classList.add("md:top-[90px]")
+        }
+
+        if (stickyMenu) {
+            stickyMenu.classList.remove("top-0")
+            stickyMenu.classList.add("top-[80px]")
+        }
+        if (pageSidebar) {
+            pageSidebar.classList.remove("top-0")
+            pageSidebar.classList.add("top-[0px]")
+        }
+        if (pageSidebarDesktop) {
+            pageSidebarDesktop.classList.remove("top-[88px]")
+            pageSidebarDesktop.classList.add("top-[88px]")
+        }
+    } else {
+        navbar?.classList?.add("-translate-y-full");
+        navbar?.classList?.remove("translate-y-0");
+
+        if (stickyShare) {
+            stickyShare.classList.add("md:top-5")
+            stickyShare.classList.remove("md:top-[90px]")
+        }
+
+        if (stickyPost) {
+            stickyPost.classList.add("md:top-5")
+            stickyPost.classList.remove("md:top-[90px]")
+        }
+
+        if (stickyMenu) {
+            stickyMenu.classList.add("top-0")
+            stickyMenu.classList.remove("top-[80px]")
+        }
+        if (pageSidebar) {
+            pageSidebar.classList.add("top-0")
+            pageSidebar.classList.remove("top-[80px]")
+        }
+        if (pageSidebarDesktop) {
+            pageSidebarDesktop.classList.remove("top-[88px]")
+            pageSidebarDesktop.classList.add("top-[88px]")
+        }
+    }
+}
+
+function changeLogoSrc(newSrc, newSrcSustainability) {
+    // Ambil semua elemen <img> dengan class "logo"
+    const logos = document.querySelectorAll('img.logo');
+    const logosustainability = document.querySelectorAll('img.logo-sustainability');
+
+    // Loop melalui setiap elemen dan ubah src-nya
+    logos.forEach(logo => {
+        logo.src = newSrc;
+    });
+    logosustainability.forEach(logo => {
+        logo.src = newSrcSustainability;
+    });
+}
+
+
+
+//window.toggleHeaderMenu = window.toggleHeaderMenu || function (parentId, id) {
+//    const parent = document.getElementById(`headermenu-${parentId}`);
+//    const content = document.getElementById(`headermenu-${id}`);
+//    const icon = document.getElementById(`headermenu-icon-${id}`);
+
+//    // Get all sibling sub-menus (same level)
+//    const siblingSubMenus = parent.querySelectorAll(":scope > li > .sub-menu");
+//    const siblingIcons = parent.querySelectorAll(":scope > li .sub-menu-icon");
+
+//    // Close all submenus except the clicked one
+//    siblingSubMenus.forEach((submenu) => {
+//        if (submenu.id !== `headermenu-${id}`) {
+//            submenu.style.maxHeight = "0";
+//        }
+//    });
+
+//    // Reset all icons except the clicked one
+//    siblingIcons.forEach((menuIcon) => {
+//        if (menuIcon.id !== `headermenu-icon-${id}`) {
+//            menuIcon.classList.add("ti-chevron-down");
+//            menuIcon.classList.remove("ti-chevron-up");
+//        }
+//    });
+
+//    // Toggle the clicked menu
+//    if (content.style.maxHeight && content.style.maxHeight !== "0px") {
+//        content.style.maxHeight = "0";
+//        icon.classList.add("ti-chevron-down");
+//        icon.classList.remove("ti-chevron-up");
+//    } else {
+//        content.style.maxHeight = content.scrollHeight + "px";
+//        icon.classList.remove("ti-chevron-down");
+//        icon.classList.add("ti-chevron-up");
+//    }
+//};
+
+
+window.toggleHeaderMenu = window.toggleHeaderMenu || function (parentId, id, hasChildren) {
+    const parent = document.getElementById(`headermenu-${parentId}`);
+    const content = document.getElementById(`headermenu-${id}`);
+    const icon = document.getElementById(`headermenu-icon-${parentId}`);
+    const submenu = parent.querySelectorAll('.sub-menu');
+    const submenuIcon = parent.querySelectorAll('.sub-menu-icon');
+    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+        content.style.maxHeight = '0';
+        icon.classList?.add('ti-chevron-down')
+        icon.classList?.remove('ti-chevron-up')
+    } else {
+        submenu.forEach((element) => {
+            
+            if (element.id !== `headermenu-${id}`) {
+                element.style.maxHeight = '0';
+            } else {
+                if (hasChildren) {
+                    content.style.maxHeight = 'max-content';
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    updateParentMaxHeight(content);
+                }
+            }
+        })
+
+        submenuIcon.forEach((element) => {
+            if (element.id !== `headermenu-icon-${parentId}`) {
+                element.classList?.add('ti-chevron-down')
+                element.classList?.remove('ti-chevron-up')
+            } else {
+                icon.classList?.remove('ti-chevron-down')
+                icon.classList?.add('ti-chevron-up')
+            }
+        })
+    }
+}
+function updateParentMaxHeight(element) {
+    let parentSubMenu = element.closest(".sub-menu"); // Find closest parent `.sub-menu`
+    while (parentSubMenu) {
+        let totalHeight = 0;
+
+        // Sum up the heights of all visible child elements
+        parentSubMenu.querySelectorAll(":scope > li > .sub-menu").forEach((child) => {
+            if (child.style.maxHeight && child.style.maxHeight !== "0px") {
+                totalHeight += child.scrollHeight;
+            }
+        });
+
+        // Set new max height
+        parentSubMenu.style.maxHeight = totalHeight + parentSubMenu.scrollHeight + "px";
+
+        // Move up the hierarchy
+        parentSubMenu = parentSubMenu.closest(".sub-menu");
+    }
+}
+function toggleMenu(parentIndex, subIndex, subsubIndex) {
+    const content = document.getElementById(`menu-${parentIndex}`);
+    const subContent = document.getElementById(`submenu-${parentIndex}-${subIndex}`);
+    const subsubContent = document.getElementById(`subsubmenu-${parentIndex}-${subIndex}-${subsubIndex}`);
+
+    const icon = document.getElementById(`menu-icon-${parentIndex}`);
+    const subIcon = document.getElementById(`submenu-icon-${parentIndex}-${subIndex}`);
+    const subsubIcon = document.getElementById(`subsubmenu-icon-${parentIndex}-${subIndex}-${subsubIndex}`);
+
+    const menu = document.querySelectorAll('.menu');
+    const menuIcon = document.querySelectorAll('.menu-icon');
+    const submenu = document.querySelectorAll('.sub-menu');
+    const submenuIcon = document.querySelectorAll('.sub-menu-icon');
+    const subsubmenu = document.querySelectorAll('.subsub-menu');
+    const subsubmenuIcon = document.querySelectorAll('.subsub-menu-icon');
+
+
+    if (parentIndex !== undefined && subIndex === undefined) { // level 1
+        if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+            content.style.maxHeight = '0';
+            icon.classList?.add('ti-chevron-down')
+            icon.classList?.remove('ti-chevron-up')
+        } else {
+            menu.forEach((element) => {
+                if (element.id !== `menu-${parentIndex}`) {
+                    element.style.maxHeight = '0';
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            })
+            menuIcon.forEach((element) => {
+                if (element.id !== `menu-icon-${parentIndex}`) {
+                    element.classList?.add('ti-chevron-down')
+                    element.classList?.remove('ti-chevron-up')
+                } else {
+                    icon.classList?.remove('ti-chevron-down')
+                    icon.classList?.add('ti-chevron-up')
+                }
+            })
+        }
+    } else if (subIndex !== undefined && subsubIndex === undefined) { // level 2
+        if (subContent.style.maxHeight && subContent.style.maxHeight !== '0px') {
+            subContent.style.maxHeight = '0';
+            subIcon.classList?.add('ti-chevron-down')
+            subIcon.classList?.remove('ti-chevron-up')
+        } else {
+            submenu.forEach((element) => {
+                if (element.id !== `submenu-${parentIndex}-${subIndex}`) {
+                    element.style.maxHeight = '0';
+                } else {
+                    subContent.style.maxHeight = subContent.scrollHeight + 'px';
+                    if (content) {
+                        content.style.maxHeight = (content.scrollHeight + subContent.scrollHeight) + 'px';
+                    }
+                }
+            })
+    
+            submenuIcon.forEach((element) => {
+                if (element.id !== `submenu-icon-${parentIndex}-${subIndex}`) {
+                    element.classList?.add('ti-chevron-down')
+                    element.classList?.remove('ti-chevron-up')
+                } else {
+                    subIcon.classList?.remove('ti-chevron-down')
+                    subIcon.classList?.add('ti-chevron-up')
+                }
+            })
+        }
+    } else if (subsubIndex !== undefined) { // level 3
+        if (subsubContent.style.maxHeight && subsubContent.style.maxHeight !== '0px') {
+            subsubContent.style.maxHeight = '0';
+            subsubIcon.classList?.add('ti-chevron-down')
+            subsubIcon.classList?.remove('ti-chevron-up')
+        } else {
+            subsubmenu.forEach((element) => {
+                if (element.id !== `subsubmenu-${parentIndex}-${subIndex}-${subsubIndex}`) {
+                    element.style.maxHeight = '0';
+                } else {
+                    subsubContent.style.maxHeight = subsubContent.scrollHeight + 'px';
+                    subContent.style.maxHeight = (subContent.scrollHeight + subsubContent.scrollHeight) + 'px';
+                    if (content) {
+                        content.style.maxHeight = (content.scrollHeight + subContent.scrollHeight + subsubContent.scrollHeight) + 'px';
+                    }
+                }
+            })
+
+            subsubmenuIcon.forEach((element) => {
+                if (element.id !== `subsubmenu-icon-${parentIndex}-${subIndex}-${subsubIndex}`) {
+                    element.classList?.add('ti-chevron-down')
+                    element.classList?.remove('ti-chevron-up')
+                } else {
+                    subsubIcon.classList?.remove('ti-chevron-down')
+                    subsubIcon.classList?.add('ti-chevron-up')
+                }
+            })
+        }
+    }
+}

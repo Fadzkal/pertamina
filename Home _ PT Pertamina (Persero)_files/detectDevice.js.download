@@ -1,0 +1,22 @@
+window.detectDevice = () => {
+    const width = window.innerWidth;
+
+    const userAgent = navigator.userAgent.toLowerCase();
+
+    const isMobile = /android|webos|iphone|ipod|blackberry|windows phone|mobile|nokia|bada/i.test(userAgent) || width < 768;
+
+    const isTablet = (/ipad|tablet/i.test(userAgent) && width < 1366) || (width > 767 && width < 1024 && !isMobile);
+
+    if (isMobile) {
+        return 'mobile';
+    } else if (isTablet) {
+        return 'tablet';
+    }
+    return 'desktop';
+};
+
+window.addResizeListener = (dotNetHelper) => {
+    window.addEventListener('resize', () => {
+        dotNetHelper.invokeMethodAsync('OnWindowResize', window.innerWidth);
+    });
+};

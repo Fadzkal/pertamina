@@ -1,0 +1,407 @@
+@font-face {
+	font-family: "Plus Jakarta Sans";
+	font-style: normal;
+	font-weight: 200 800;
+	font-display: swap;
+	src: url("./fonts/PlusJakartaSans[wght].woff2") format("woff2");
+}
+@font-face {
+	font-family: "Plus Jakarta Sans";
+	font-style: italic;
+	font-weight: 200 800;
+	font-display: swap;
+	src: url("./fonts/PlusJakartaSans-Italic[wght].woff2") format("woff2");
+}
+*,
+::after,
+::before {
+	box-sizing: border-box;
+}
+body,
+html {
+	margin: 0;
+	font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+	font-optical-sizing: auto;
+	font-style: normal;
+	touch-action: manipulation;
+}
+.border-grid > div {
+	position: relative;
+}
+.border-grid > div::after {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 1px;
+	background-color: #d1d5db;
+}
+.border-grid > div:nth-child(n)::before {
+	display: block;
+}
+.border-grid > div:last-child::before,
+.border-grid > div:nth-last-child(-n + 3)::after {
+	display: none;
+}
+.loader-on-content {
+	position: absolute !important;
+	opacity: 0.8;
+	width: 100% !important;
+	height: 100% !important;
+}
+.custom-carousel-wrapper .swiper-slide > div {
+	margin: 2.5px;
+	width: calc(100% - 5px);
+}
+.text-block ul:has(.ql-align-justify) {
+	padding-left: 3rem;
+}
+.text-block ul:has(.ql-align-justify) + ol:has(.ql-align-justify) {
+	padding-left: 6rem;
+}
+.text-block ol:has(.ql-indent-1),
+.text-block ul:has(.ql-indent-1) {
+	padding-left: 1.5rem;
+}
+.text-block ol:has(.ql-indent-1) li,
+.text-block ul:has(.ql-indent-1) li {
+	list-style-type: none;
+	position: relative;
+}
+.text-block ol:has(.ql-indent-1) > li {
+	counter-increment: list-0;
+}
+.text-block ol:has(.ql-indent-1) > li.ql-indent-1 {
+	counter-increment: list-1;
+}
+.text-block ol:has(.ql-indent-1) > li.ql-indent-2 {
+	counter-increment: list-2;
+}
+.text-block ol:has(.ql-indent-1) > li.ql-indent-3 {
+	counter-increment: list-3;
+}
+.text-block ol:has(.ql-indent-1) > li:before,
+.text-block ul:has(.ql-indent-1) > li:before {
+	display: inline-block;
+	margin-left: -1.5em;
+	margin-right: 0.3em;
+	text-align: right;
+	white-space: nowrap;
+	width: 1.2em;
+}
+.text-block ol:has(.ql-indent-1) > li:before {
+	content: counter(list-0, decimal) ". ";
+}
+.text-block ol:has(.ql-indent-1) > li.ql-indent-1:before {
+	content: counter(list-1, lower-alpha) ". ";
+}
+.text-block ol:has(.ql-indent-1) > li.ql-indent-2:before {
+	content: counter(list-2, lower-roman) ". ";
+}
+.text-block ol:has(.ql-indent-1) > li.ql-indent-3:before {
+	content: counter(list-3, decimal) ". ";
+}
+.text-block .ql-indent-1 {
+	padding-left: 1.5rem;
+}
+.text-block .ql-indent-2 {
+	padding-left: 2.75rem;
+}
+.text-block .ql-indent-3 {
+	padding-left: 4rem;
+}
+.text-block ul:has(.ql-indent-1) > li:before {
+	content: "\2022";
+}
+@supports (counter-set: none) {
+	.text-block li {
+		counter-set: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
+			list-9;
+	}
+	.text-block li.ql-indent-1 {
+		counter-set: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
+	}
+	.text-block li.ql-indent-2 {
+		counter-set: list-3 list-4 list-5 list-6 list-7 list-8 list-9;
+	}
+	.text-block li.ql-indent-3 {
+		counter-set: list-4 list-5 list-6 list-7 list-8 list-9;
+	}
+}
+.text-block table {
+	width: 100%;
+}
+.text-block table tr td,
+.text-block table tr th {
+	padding: 0.75rem;
+	border: 1px solid #cbd5e1;
+}
+.text-block .ql-align-center {
+	text-align: center;
+}
+.text-block .ql-align-right {
+	text-align: right;
+}
+.text-block .ql-align-justify {
+	text-align: justify;
+}
+.text-block b,
+.text-block strong {
+	font-weight: 600;
+}
+.text-block h1 {
+	font-size: 1.5rem;
+	line-height: 2rem;
+}
+.text-block h2 {
+	font-size: 1.25rem;
+	line-height: 1.75rem;
+}
+.text-block h3 {
+	font-size: 1.125rem;
+	line-height: 1.75rem;
+}
+.text-block h4 {
+	font-size: 1rem;
+	line-height: 1.5rem;
+}
+@keyframes smooth-spin {
+	0% {
+		transform: rotate(0);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+.spinner {
+	animation: 1s cubic-bezier(0.4, 0, 0.2, 1) infinite smooth-spin;
+}
+@media only screen and (min-width: 1023px) {
+	.border-grid > div::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 1px;
+		height: 100%;
+		background-color: #d1d5db;
+	}
+	.page-title-presentasi {
+		object-position: 0 70% !important;
+	}
+}
+@media (min-width: 768px) {
+	.card-carousel .swiper-slide-visible:not(:has(~ .swiper-slide-visible)) {
+		opacity: 0.4;
+		cursor: none;
+		pointer-events: none;
+	}
+}
+.ql-table-better {
+	margin-top: 0 !important;
+	border: none !important;
+	table-layout: fixed !important;
+}
+.ql-table-better td {
+	vertical-align: middle !important;
+	border-bottom: 1px solid #e2e8f0 !important;
+}
+.ql-table-better td > p {
+	margin: 0 !important;
+	padding-left: 16px !important;
+	padding-right: 16px !important;
+}
+.credit-ratings-table .ql-table-better td {
+	border-bottom: 1px solid #e2e8f0 !important;
+	border-top: none !important;
+}
+@media (max-width: 48rem) {
+	.home-page .inactive-bullet > * {
+		transition: all 320ms ease-in-out;
+	}
+	.home-page .inactive-bullet:not(.active-bullet) > * {
+		display: none;
+	}
+	.home-page .swiper-pagination-bullets > *:not(.active-bullet) {
+		min-width: calc(6rem - 0.5vw);
+		max-width: calc(6rem - 0.5vw);
+		width: 100%;
+	}
+	.home-page .swiper-pagination-bullets > .active-bullet {
+		width: calc(20vw + 4rem);
+		min-width: unset;
+		max-width: unset;
+	}
+}
+@media (max-width: 40rem) {
+	.home-page .swiper-pagination-bullets > *:not(.active-bullet) {
+		min-width: calc(2rem - 0.5vw);
+		max-width: calc(2rem - 0.5vw);
+		width: 100%;
+	}
+	.home-page .swiper-pagination-bullets > .active-bullet {
+		width: calc(20vw + 4rem);
+		min-width: unset;
+		max-width: unset;
+	}
+	.home-page .swiper-pagination-bullets > .active-bullet svg {
+		max-width: calc(8px - 1vw);
+		width: 100%;
+	}
+}
+
+/* ========== TAMBAHAN PERBAIKAN RESPONSIVE UNTUK ANDROID ========== */
+/* Tidak menghapus kode di atas, hanya menambahkan di sini */
+
+@media (max-width: 768px) {
+    /* Sembunyikan menu desktop asli, tampilkan mobile nav */
+    header .header-wrapper nav:not(.mobile-nav) {
+        display: none !important;
+    }
+    .mobile-nav {
+        display: flex !important;
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        max-width: 320px;
+        height: 100vh;
+        background: white;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 80px 24px 24px;
+        transition: left 0.3s ease;
+        z-index: 60;
+        overflow-y: auto;
+        box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+    }
+    .mobile-nav.open {
+        left: 0;
+    }
+    .mobile-nav li {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 12px 0;
+    }
+    .mobile-nav .sub-menu {
+        position: static !important;
+        opacity: 1 !important;
+        width: 100% !important;
+        background: #f8fafc !important;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        box-shadow: none !important;
+    }
+    .mobile-nav .sub-menu.open {
+        max-height: 800px;
+    }
+    .menu-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        z-index: 70;
+    }
+    .menu-toggle span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: #0b2f9f;
+        position: relative;
+    }
+    .menu-toggle span::before,
+    .menu-toggle span::after {
+        content: '';
+        position: absolute;
+        width: 24px;
+        height: 2px;
+        background: #0b2f9f;
+        transition: 0.2s;
+    }
+    .menu-toggle span::before { top: -8px; }
+    .menu-toggle span::after { bottom: -8px; }
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 55;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.2s;
+    }
+    .menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    /* Perbaikan tampilan carousel pagination di mobile */
+    .home-page .swiper-pagination-bullets {
+        gap: 4px;
+        padding: 0 8px;
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+    .home-page .inactive-bullet:not(.active-bullet) .bullet-title {
+        display: none;
+    }
+    .home-page .active-bullet .bullet-title {
+        display: inline-block;
+        white-space: normal;
+        font-size: 10px;
+        max-width: 120px;
+    }
+    /* Ubah semua grid menjadi 1 kolom di mobile */
+    .grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    }
+    /* Perbaikan tinggi minimum hero section */
+    .home-page .min-h-\[98vh\] {
+        min-height: 70vh !important;
+    }
+    /* Perbaikan ukuran font heading */
+    .text-4xl {
+        font-size: 1.75rem !important;
+        line-height: 1.3 !important;
+    }
+    /* Perbaikan padding horizontal */
+    .px-6, .px-4 {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    /* Perbaikan padding vertikal */
+    .pb-12, .pt-12 {
+        padding-bottom: 2rem !important;
+        padding-top: 2rem !important;
+    }
+    /* Footer */
+    footer .grid {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-page .active-bullet .bullet-title {
+        font-size: 9px;
+        max-width: 90px;
+    }
+}
+
+/* Sembunyikan elemen mobile di desktop */
+.menu-toggle {
+    display: none;
+}
+.mobile-nav {
+    display: none;
+}
+.menu-overlay {
+    display: none;
+}
